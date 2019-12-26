@@ -1,7 +1,10 @@
 const container = document.querySelector("#body_calc");
 const screen = document.querySelector('#screen_calc');
-const txt_array = Array.from("> C/789*456-123+0.=");
+const txt_array = Array.from("®<c/789*456-123+0.=♥");
 const accepted_characters = Array.from("1234567890+-/*.")
+const egg = document.querySelector("#egg");
+const odin_arr = ["This lovely project was inspired by The Odin Project.", "Go to theodinproject.org to learn full stack web dev for 100% free.", 'The Odin Project devs are so wholesome.', 'theodinproject.org', 'Odin is a utility software developed and used by Samsung internally. It can be used to flash a custom recovery firmware image to a Samsung Android device.', 'Odin was a nordic god', 'marco', 'you are awesome guys, thanks']
+const robo_arr = ["with ♥ by robo-monk", "nobody will see this", 'robo-monk? more like robo-ping-pong', 'its late i have to sleep eventually', 'beatles are nice', 'john lennon is a legend, guys', 'Living is easy with eyes closed, misunderstanding all you see', 'you may say im a dreamer', 'but im not the only one', "this calculator is coded in 252 lines of js, 22 lines of html  and 71 css", "give peace a chance", "i love easter eggs", 'polo', 'imma head out', 'contact me: filtap007@gmail.com']
 
 const numbers = Array.from("1234567890");
 const operators = Array.from("+-/*");
@@ -22,7 +25,7 @@ var exception = true;
 // const rules = ["+", "", "operators"]
 
 function buildCalc(){
-
+    
     const table = document.createElement('table')
 
     for (i = 0; i < 5; i++) {
@@ -35,8 +38,24 @@ function buildCalc(){
             const col = document.createElement('td');
             but = document.createElement('button');
             but.classList.add("btn");
-            but.id = txt_array[4 * i + u];
-            but.textContent = txt_array[4*i+u];
+            var idd = txt_array[4 * i + u];
+            but.textContent = idd;
+
+            if (idd=="<"){
+                idd="Backspace";
+            } else if (idd == "=") {
+                idd = "Enter";
+            } 
+            but.id = idd;
+            const temp = idd;
+            but.onclick = function () { updateScreen(String(temp)); };
+            
+            if (idd == "♥"){
+                but.onclick = function () { egg.textContent=randElement(odin_arr); };
+            } else if (idd == "®"){
+                but.onclick = function () { egg.textContent = randElement(robo_arr); };
+            }
+    
             row.appendChild(col);
             col.appendChild(but);
 
@@ -57,10 +76,13 @@ function keyPress(e){
 
 function updateScreen(n){
 
-    accepted_types = [];
-    
+    if (n=="="){
+        n == "Enter";
+    }
 
-    console.log(arr);
+    accepted_types = [];
+
+    console.log(n);
 
     switch (defineType(arr[arr.length - 1])){
 
@@ -92,7 +114,7 @@ function updateScreen(n){
     if (n == "Enter") {
         screen.textContent=operate(screen.textContent);
     }else if (accepted_types.some((el) => (el == temp))){
-        if (n=="."&&!dot_allow) {n="";}
+        if ((n=="."&&!dot_allow)||(arr.length>9)) {n="";}
         screen.textContent += n;
 
     }else if (n==reset_ch){
@@ -219,6 +241,10 @@ function defineType(c){
 //     return ;
 
 // }
+
+function randElement(arr){
+    return arr[Math.floor(Math.random() * arr.length)];
+}
 
 window.addEventListener('keydown', keyPress);
 buildCalc();
